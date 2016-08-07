@@ -15,8 +15,8 @@ You can make sure webhook call endpoint and see parameter passed by webhook.
 1. See parameter file in S3 using AWS console.
 
 ## Install
-Run `terraform apply`.
-It show endpoint on API Gateway.
+1. Run `zip -r github_webhook.zip ./*`
+1. Run `terraform apply`. It show endpoint on API Gateway.
 
 ## Author
 [shibataka000](https://github.com/shibataka000)
