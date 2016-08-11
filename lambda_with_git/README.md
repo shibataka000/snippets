@@ -53,14 +53,14 @@ $ virtualenv .
 $ source bin/activate
 $ pip install -r requirements.txt
 $ cd lib/python2.7/site-packages
-$ zip ../../../project.zip ./* -r
+$ zip ../../../lambda_with_git.zip ./* -r
 ```
 
 Add ssh private key.
 
 ```
 $ chmod 777 ssh/id_rsa
-$ zip project.zip ssh/id_rsa
+$ zip lambda_with_git.zip ssh/id_rsa
 ```
 
 Add shared libraries.
@@ -69,7 +69,7 @@ Add shared libraries.
 $ cp lib/python2.7/site-packages/.libs_cffi_backend/libffi-72499c49.so.6.0.4 .
 $ cp /lib/x86_64-linux-gnu/libssl.so.1.0.0  .
 $ cp /lib/x86_64-linux-gnu/libcrypto.so.1.0.0 .
-$ zip project.zip libffi-72499c49.so.6.0.4 libssl.so.1.0.0 libcrypto.so.1.0.0
+$ zip lambda_with_git.zip libffi-72499c49.so.6.0.4 libssl.so.1.0.0 libcrypto.so.1.0.0
 ```
 
 ### Create Lambda function
