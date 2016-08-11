@@ -40,7 +40,7 @@ Enter same passphrase again:
 Regist public key (`id_rsa.pub`) to GitHub and move private key (`id_rsa`) to `./ssh` directory.
 
 ### Create deploy package
-	Add source code.
+Add source code.
 
 ```
 $ zip lambda_with_git.zip *.py
