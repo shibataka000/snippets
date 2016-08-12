@@ -6,12 +6,6 @@ provider "aws" {
   region = "${var.region}"
 }
 
-# CloudWatch
-resource "aws_cloudwatch_event_rule" "cron" {
-  name = "cron"
-  schedule_expression = "rate(5 minutes)"
-}
-
 # Lambda
 resource "aws_lambda_function" "lambda_with_cron" {
   filename = "lambda_with_cron.zip"
@@ -29,4 +23,20 @@ resource "aws_lambda_permission" "permission" {
   action = "lambda:InvokeFunction"
   principal = "events.amazonaws.com"
   source_arn = "${aws_cloudwatch_event_rule.cron.arn}"
+
+  depends_on = ["aws_lambda_function.lambda_with_cron", "aws_cloudwatch_event_rule.cron"]
+}
+
+# CloudWatch
+resource "aws_cloudwatch_event_rule" "cron" {
+  name = "cron"
+  schedule_expression = "rate(5 minutes)"
+}
+
+resource "aws_cloudwatch_event_target" "lambda" {
+  rule = "${aws_cloudwatch_event_rule.cron.name}"
+  target_id = "lambda_function"
+  arn = "${aws_lambda_function.lambda_with_cron.arn}"
+
+  depends_on = ["aws_lambda_function.lambda_with_cron", "aws_cloudwatch_event_rule.cron"]
 }
