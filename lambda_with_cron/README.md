@@ -12,5 +12,8 @@ $ zip lambda_with_cron.zip *.py
 $ terraform apply
 ```
 
+## Reference
+- [Using AWS Lambda with Scheduled Events](https://docs.aws.amazon.com/lambda/latest/dg/with-scheduled-events.html)
+
 ## Author
 [shibataka000](https://github.com/shibataka000)
