@@ -4,7 +4,7 @@ Experiment how to communicate between Lambda function using SQS.
 
 ## Description
 I try to make two Lambda functions communicating each other using SQS.
-But I wonder that
+But I wonder following question.
 
 When function A send message and invoke function B some times,
 do some of invocation of function B receive same message?
