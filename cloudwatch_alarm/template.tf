@@ -57,3 +57,23 @@ resource "aws_cloudwatch_metric_alarm" "error_in_lambda" {
   threshold = "1"
   alarm_actions = ["${aws_sns_topic.alarm.arn}"]
 }
+
+# SQS
+resource "aws_sqs_queue" "queue" {
+  name = "queue"
+}
+
+resource "aws_cloudwatch_metric_alarm" "old_message_in_sqs" {
+  alarm_name = "old_message_in_sqs"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods = "1"
+  metric_name = "ApproximateAgeOfOldestMessage"
+  namespace = "AWS/SQS"
+  period = "300"
+  statistic = "Maximum"
+  threshold = "300"
+  alarm_actions = ["${aws_sns_topic.alarm.arn}"]
+  dimensions {
+    QueueName = "${aws_sqs_queue.queue.name}"
+  }
+}
