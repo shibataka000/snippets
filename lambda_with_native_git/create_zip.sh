@@ -25,29 +25,31 @@ cd /lib64
 zip $ZIP_FILE ld-linux-x86-64.so.2
 
 # for git-remote-https
-cd /lib/x86_64-linux-gnu/
+cd /lib/x86_64-linux-gnu
 zip $ZIP_FILE libpcre.so.3
 zip $ZIP_FILE libz.so.1
 zip $ZIP_FILE libresolv.so.2
 zip $ZIP_FILE libpthread.so.0
+zip $ZIP_FILE librt.so.1
 zip $ZIP_FILE libc.so.6
-zip $ZIP_FILE libgcrypt.so.11
-zip $ZIP_FILE libgpg-error.so.0
 zip $ZIP_FILE libcom_err.so.2
 zip $ZIP_FILE libdl.so.2
 zip $ZIP_FILE libkeyutils.so.1
 zip $ZIP_FILE libcrypt.so.1
 
-cd /usr/lib/x86_64-linux-gnu/
+cd /usr/lib/x86_64-linux-gnu
 zip $ZIP_FILE libcurl-gnutls.so.4
 zip $ZIP_FILE libidn.so.11
-zip $ZIP_FILE librtmp.so.0
-zip $ZIP_FILE libgnutls.so.26
+zip $ZIP_FILE librtmp.so.1
+zip $ZIP_FILE libnettle.so.6
+zip $ZIP_FILE libgnutls.so.30
 zip $ZIP_FILE libgssapi_krb5.so.2
 zip $ZIP_FILE liblber-2.4.so.2
 zip $ZIP_FILE libldap_r-2.4.so.2
-zip $ZIP_FILE libtasn1.so.6
+zip $ZIP_FILE libhogweed.so.4
+zip $ZIP_FILE libgmp.so.10
 zip $ZIP_FILE libp11-kit.so.0
+zip $ZIP_FILE libtasn1.so.6
 zip $ZIP_FILE libkrb5.so.3
 zip $ZIP_FILE libk5crypto.so.3
 zip $ZIP_FILE libkrb5support.so.0
