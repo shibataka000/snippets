@@ -16,7 +16,7 @@ def run(event, context):
     )
     git = os.path.join(root, "usr/bin/git")
 
-    url = "git://github.com/shibataka000/snippets"
+    url = "https://github.com/shibataka000/snippets"
     path = "/tmp/snippets"
 
     cmd = "{} clone {} {}".format(git, url, path)
