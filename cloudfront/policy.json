@@ -1,0 +1,13 @@
+{
+    "Version":"2012-10-17",
+    "Statement": [
+	{
+	    "Effect": "Allow",
+	    "Principal": {
+		"AWS": "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity E37B9KIK0WDT36"
+	    },
+	    "Action": "s3:GetObject",
+	    "Resource": "arn:aws:s3:::sbtk-sample-bucket/*"
+	}
+    ]
+}
