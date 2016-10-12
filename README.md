@@ -1,6 +1,6 @@
 # snippets
 
-These are POC, sample code et al.
+Sample codes.
 
 ## Author
 [shibataka000](https://github.com/shibataka000)
