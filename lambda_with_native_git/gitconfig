@@ -1,0 +1,2 @@
+[credential]
+	helper = store --file /tmp/git-credentials
