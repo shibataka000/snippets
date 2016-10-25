@@ -13,8 +13,12 @@ def run(event, context):
     root = os.path.abspath(os.path.join(__file__, ".."))
 
     os.environ["HOME"] = "/tmp"
-    os.environ["GIT_EXEC_PATH"] = os.path.join(root, "usr/libexec/git-core")
-    os.environ["GIT_TEMPLATE_DIR"] = os.path.join(root, "usr/share/git-core/templates")
+    os.environ["GIT_EXEC_PATH"] = os.path.join(
+        root, "usr/libexec/git-core"
+    )
+    os.environ["GIT_TEMPLATE_DIR"] = os.path.join(
+        root, "usr/share/git-core/templates"
+    )
 
     shutil.copy(os.path.join(root, "gitconfig"), "/tmp/.gitconfig")
     shutil.copy(os.path.join(root, "git-credentials"), "/tmp/git-credentials")
