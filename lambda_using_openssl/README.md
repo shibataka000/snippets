@@ -1,4 +1,4 @@
-# lambda\_with\_openssl
+# Lambda using openssl
 
 Make sure that we can run `openssl` command on Lambda.
 

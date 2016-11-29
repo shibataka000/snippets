@@ -1,4 +1,4 @@
-# lambda\_with\_git
+# Lambda using git library
 
 Pull private repository from GitHub by Lambda function.
 

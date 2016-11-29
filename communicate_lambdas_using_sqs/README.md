@@ -1,4 +1,4 @@
-# lambda\_with\_sqs
+# Communicate Lambdas using SQS
 
 Experiment how to communicate between Lambda function using SQS.
 

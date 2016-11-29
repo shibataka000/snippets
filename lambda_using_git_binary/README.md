@@ -1,4 +1,4 @@
-# lambdaw\_with\_native\_git
+# Lambda using git binary
 
 Sample code to clone private repository from GitHub on Lambda function.
 

@@ -1,5 +1,4 @@
-github_webhook
-====
+# GitHub Webhook
 
 Sample code to receive GitHub webhook.
 

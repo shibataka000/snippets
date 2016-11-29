@@ -1,5 +1,4 @@
-ec2\_with\_boto3
-====
+# Run EC2 by boto3
 
 Launch EC2 instance by boto3.
 

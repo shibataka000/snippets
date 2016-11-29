@@ -1,4 +1,4 @@
-# lambda\_with\_cron
+# Run Lambda by cron
 
 Snippets to run Lambda function repeatedly.
 
