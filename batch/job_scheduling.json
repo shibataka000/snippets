@@ -1,0 +1,17 @@
+{
+    "jobName": "echoname", 
+    "jobQueue": "echoname", 
+    "dependsOn": [],
+    "jobDefinition": "echoname", 
+    "parameters": {
+        "name": "takao2"
+    }, 
+    "containerOverrides": {
+        "environment": [
+            {
+                "name": "age", 
+                "value": "36"
+            }
+        ]
+    }
+}
