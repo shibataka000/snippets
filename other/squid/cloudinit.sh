@@ -1,7 +1,7 @@
 #!/bin/bash
 apt update
 apt upgrade -y
-apt install gcc g++ make libssl-dev
+apt install gcc g++ make libssl-dev -y
 
 cd $HOME
 wget http://www.squid-cache.org/Versions/v3/3.5/squid-3.5.24.tar.gz
