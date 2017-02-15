@@ -10,6 +10,6 @@ resource "aws_instance" "ubuntu" {
   user_data = "${file("cloudinit.sh")}"
 }
 
-output "ssh_command" {
+output "ssh" {
   value = "ssh -i ~/.ssh/ec2_default.pem ubuntu@${aws_instance.ubuntu.public_ip}"
 }
