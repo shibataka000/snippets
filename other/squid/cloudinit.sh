@@ -9,7 +9,7 @@ cd $HOME
 wget http://www.squid-cache.org/Versions/v3/3.5/squid-3.5.24.tar.gz
 tar -zxvf squid-3.5.24.tar.gz
 cd ./squid-3.5.24
-./configure --prefix=/usr/local/squid --with-openssl
+./configure --prefix=/usr/local/squid --with-openssl --enable-linux-netfilter
 make all
 make install
 
