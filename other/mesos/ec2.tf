@@ -7,7 +7,7 @@ resource "aws_instance" "mesos_master" {
   instance_type = "t2.large"
   vpc_security_group_ids = ["sg-5a03023f"]
   key_name = "default"
-  user_data = "${file("setup_mesos.sh")}"
+  user_data = "${file("cloud-init.sh")}"
 }
 
 resource "aws_instance" "mesos_agent_1" {
@@ -15,7 +15,7 @@ resource "aws_instance" "mesos_agent_1" {
   instance_type = "t2.large"
   vpc_security_group_ids = ["sg-5a03023f"]
   key_name = "default"
-  user_data = "${file("setup_mesos.sh")}"
+  user_data = "${file("cloud-init.sh")}"
 }
 
 resource "aws_instance" "mesos_agent_2" {
@@ -23,7 +23,7 @@ resource "aws_instance" "mesos_agent_2" {
   instance_type = "t2.large"
   vpc_security_group_ids = ["sg-5a03023f"]
   key_name = "default"
-  user_data = "${file("setup_mesos.sh")}"
+  user_data = "${file("cloud-init.sh")}"
 }
 
 output "mesos_master.public_ip" {
