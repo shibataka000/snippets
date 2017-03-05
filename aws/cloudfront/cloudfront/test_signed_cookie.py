@@ -9,8 +9,8 @@ import time
 import boto3
 
 CLOUDFRONT_KEY_PATH = './sk.pem'
-CLOUDFRONT_KEY_PAIR_ID = 'APKAJEL5RQQ36NTUXW6Q'
-CLOUDFRONT_URL = 'http://dunfj7ei6w49.cloudfront.net'
+CLOUDFRONT_KEY_PAIR_ID = 'APKAJNR3YMALBMFLTE2A'
+CLOUDFRONT_URL = 'http://d2ldvv41dbsehy.cloudfront.net'
 
 
 def get_cloudfront_policy(url, expires):
