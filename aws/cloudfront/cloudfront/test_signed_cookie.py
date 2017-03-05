@@ -1,16 +1,5 @@
 # coding: utf-8
 
-'''
-How to run test.
-
-1. Generate CloudFront key pair and save secret key.
-2. Set following parameter in this script.
-    - CLOUDFRONT_KEY_PATH: Path to CloudFront secret key.
-    - CLOUDFRONT_KEY_PAIR_ID: CloudFront key pair id
-    - CLOUDFRONT_URL: CloudFront URL (e.g. http://dunfj7ei6w49.cloudfront.net).
-3. Run pytest.
-'''
-
 import requests
 import json
 import subprocess
