@@ -12,16 +12,17 @@ CLOUDFRONT_KEY_PATH = './sk.pem'
 CLOUDFRONT_KEY_PAIR_ID = 'APKAJNR3YMALBMFLTE2A'
 CLOUDFRONT_URL = 'http://d2ldvv41dbsehy.cloudfront.net'
 
+NUMBER_OF_FLAGS = 2
 
-def get_cloudfront_policy(url, expires):
-    policy = {
-        'Statement': [
-            {
-                'Resource': url,
-                'Condition': {'DateLessThan': {'AWS:EpochTime': expires}},
-            }
-        ]
-    }
+
+def get_cloudfront_policy(urls, expires):
+    statement = []
+    for url in urls:
+        statement.append({
+            'Resource': url,
+            'Condition': {'DateLessThan': {'AWS:EpochTime': expires}},
+        })
+        policy = {'Statement': statement}
     return json.dumps(policy).replace(' ', '')
 
 
@@ -60,6 +61,9 @@ def get_cloudfront_signed_cookie(url, expires):
 def setup():
     s3 = boto3.client("s3")
     s3.upload_file("./flag.txt", "sbtk-sample-bucket", "flag.txt")
+    for i in range(NUMBER_OF_FLAGS):
+        key = "flag{}.txt".format(i)
+        s3.upload_file("./flag.txt", "sbtk-sample-bucket", key)
 
 
 def test_flag_cannot_be_gotten_without_signed_cookie():
@@ -68,13 +72,27 @@ def test_flag_cannot_be_gotten_without_signed_cookie():
     assert r.status_code == 403
 
 
-def test_flag_can_be_gotten_flag_with_signed_cookie():
-    url = '{0}/flag.txt'.format(CLOUDFRONT_URL)
+def test_flag_can_be_gotten_with_signed_cookie():
+    urls = ['{0}/flag.txt'.format(CLOUDFRONT_URL)]
     now = datetime.datetime.now()
     expires = now + datetime.timedelta(days=1)
     expires_unixtime = int(time.mktime(expires.timetuple()))
-    cookie = get_cloudfront_signed_cookie(url, expires_unixtime)
+    cookie = get_cloudfront_signed_cookie(urls, expires_unixtime)
     headers = {'Cookie': cookie}
-    r = requests.get(url, headers=headers)
+    r = requests.get(urls[0], headers=headers)
     assert r.status_code == 200
     assert r.text.strip() == 'Catch the flag!'
+
+
+def test_flag_can_be_gotten_with_multi_statement_signed_cookie():
+    urls = ['{0}/flag{1}.txt'.format(CLOUDFRONT_URL, i)
+            for i in range(NUMBER_OF_FLAGS)]
+    now = datetime.datetime.now()
+    expires = now + datetime.timedelta(days=1)
+    expires_unixtime = int(time.mktime(expires.timetuple()))
+    cookie = get_cloudfront_signed_cookie(urls, expires_unixtime)
+    headers = {'Cookie': cookie}
+    for url in urls:
+        r = requests.get(url, headers=headers)
+        assert r.status_code == 200
+        assert r.text.strip() == 'Catch the flag!'
