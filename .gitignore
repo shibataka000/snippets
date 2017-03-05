@@ -1,2 +1,4 @@
 *.tfstate*
 *.zip
+.cache/
+__pycache__/
