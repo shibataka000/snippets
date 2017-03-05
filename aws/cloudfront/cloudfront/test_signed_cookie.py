@@ -6,6 +6,7 @@ import subprocess
 import datetime
 import time
 
+import boto3
 
 CLOUDFRONT_KEY_PATH = './sk.pem'
 CLOUDFRONT_KEY_PAIR_ID = 'APKAJEL5RQQ36NTUXW6Q'
@@ -54,6 +55,11 @@ def get_cloudfront_signed_cookie(url, expires):
         cloudfront_policy,
         CLOUDFRONT_KEY_PAIR_ID
     )
+
+
+def setup():
+    s3 = boto3.client("s3")
+    s3.upload_file("./flag.txt", "sbtk-sample-bucket", "flag.txt")
 
 
 def test_flag_cannot_be_gotten_without_signed_cookie():
