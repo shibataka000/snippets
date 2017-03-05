@@ -68,7 +68,7 @@ def test_flag_cannot_be_gotten_without_signed_cookie():
     assert r.status_code == 403
 
 
-def test_flag_can_be_gotten_flag_with_signed_cookie():
+def test_flag_can_be_gotten_with_signed_cookie():
     url = '{0}/flag.txt'.format(CLOUDFRONT_URL)
     now = datetime.datetime.now()
     expires = now + datetime.timedelta(days=1)
