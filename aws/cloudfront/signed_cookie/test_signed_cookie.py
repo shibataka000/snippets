@@ -1,26 +1,16 @@
 # coding: utf-8
 
-'''
-How to run test.
-
-1. Generate CloudFront key pair and save secret key.
-2. Set following parameter in this script.
-    - CLOUDFRONT_KEY_PATH: Path to CloudFront secret key.
-    - CLOUDFRONT_KEY_PAIR_ID: CloudFront key pair id
-    - CLOUDFRONT_URL: CloudFront URL (e.g. http://dunfj7ei6w49.cloudfront.net).
-3. Run pytest.
-'''
-
 import requests
 import json
 import subprocess
 import datetime
 import time
 
+import boto3
 
 CLOUDFRONT_KEY_PATH = './sk.pem'
-CLOUDFRONT_KEY_PAIR_ID = 'APKAJEL5RQQ36NTUXW6Q'
-CLOUDFRONT_URL = 'http://dunfj7ei6w49.cloudfront.net'
+CLOUDFRONT_KEY_PAIR_ID = 'APKAJNR3YMALBMFLTE2A'
+CLOUDFRONT_URL = 'http://d2ldvv41dbsehy.cloudfront.net'
 
 
 def get_cloudfront_policy(url, expires):
@@ -67,13 +57,18 @@ def get_cloudfront_signed_cookie(url, expires):
     )
 
 
+def setup():
+    s3 = boto3.client("s3")
+    s3.upload_file("./flag.txt", "sbtk-sample-bucket", "flag.txt")
+
+
 def test_flag_cannot_be_gotten_without_signed_cookie():
     url = '{0}/flag.txt'.format(CLOUDFRONT_URL)
     r = requests.get(url)
     assert r.status_code == 403
 
 
-def test_flag_can_be_gotten_flag_with_signed_cookie():
+def test_flag_can_be_gotten_with_signed_cookie():
     url = '{0}/flag.txt'.format(CLOUDFRONT_URL)
     now = datetime.datetime.now()
     expires = now + datetime.timedelta(days=1)

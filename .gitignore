@@ -1,2 +1,5 @@
 *.tfstate*
 *.zip
+.cache/
+__pycache__/
+*flymake*
