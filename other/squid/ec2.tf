@@ -4,7 +4,7 @@ provider "aws" {
 
 resource "aws_instance" "ubuntu" {
   ami = "ami-a21529cc"
-  instance_type = "t2.micro"
+  instance_type = "t2.medium"
   vpc_security_group_ids = ["sg-5a03023f"]
   key_name = "default"
   user_data = "${file("cloudinit.sh")}"
