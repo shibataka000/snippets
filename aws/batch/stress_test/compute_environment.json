@@ -1,0 +1,25 @@
+{
+    "computeEnvironmentName": "echoname",
+    "type": "MANAGED",
+    "state": "ENABLED",
+    "computeResources": {
+        "type": "EC2",
+        "minvCpus": 0,
+        "maxvCpus": 256,
+        "desiredvCpus": 16,
+	"instanceRole": "arn:aws:iam::370106426606:instance-profile/ecsInstanceRole",
+        "instanceTypes": [
+            "optimal"
+        ], 
+        "subnets": [
+	    "subnet-7b6de946",
+	    "subnet-c8cad6e3",
+	    "subnet-c1f61499",
+	    "subnet-1e559d68"
+        ], 
+        "securityGroupIds": [
+            "sg-ff2f3399"
+        ]
+    },
+    "serviceRole": "arn:aws:iam::370106426606:role/service-role/AWSBatchServiceRole"
+}

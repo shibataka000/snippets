@@ -1,0 +1,26 @@
+{
+    "jobDefinitionName": "echoname",
+    "type": "container",
+    "parameters": {
+	"name": "alice"
+    },
+    "containerProperties": {
+	"image": "busybox",
+	"vcpus": 2,
+	"memory": 2000,
+	"command": [
+	    "echo",
+	    "Ref::name"
+	],
+	"volumes": [],
+	"environment": [
+	    {
+		"name": "age",
+		"value": "20"
+	    }
+	],
+	"mountPoints": [],
+	"readonlyRootFilesystem": false,
+	"privileged": false
+    }
+}
