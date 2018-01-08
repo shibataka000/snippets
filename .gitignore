@@ -1,5 +1,13 @@
+# terraform
+.terraform/
 *.tfstate*
-*.zip
+
+# python
 .cache/
 __pycache__/
+
+# emacs
 *flymake*
+
+# other
+*.zip
