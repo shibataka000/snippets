@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Transfer Jira issue key to SQS when issue updated.
+Resources:
+  PostFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_handler.issue_updated
+      Runtime: python3.6
+      MemorySize: 128
+      Timeout: 10
+      Policies:
+        - AmazonSQSFullAccess
+      Environment:
+        Variables:
+          SQS_QUEUE_URL: !Ref Queue
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /
+            Method: post
+  Queue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: issues
+  DomainName:
+    Type: AWS::ApiGateway::DomainName
+    Properties:
+      
