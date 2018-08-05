@@ -1,9 +1,5 @@
 provider "azurerm" {}
 
-variable "location" {
-  default = "Japan East"
-}
-
 terraform {
   backend "azurerm" {
     storage_account_name = "sbtktfstate"
@@ -12,36 +8,29 @@ terraform {
   }
 }
 
-resource "azurerm_resource_group" "rg" {
+resource "azurerm_resource_group" "sample" {
   name = "sample"
-  location = "${var.location}"
+  location = "Japan East"
 }
 
-resource "azurerm_virtual_network" "vnet" {
+resource "azurerm_virtual_network" "sample" {
   name = "sample"
-  location = "${var.location}"
-  resource_group_name = "${azurerm_resource_group.rg.name}"
+  resource_group_name = "${azurerm_resource_group.sample.name}"
+  location = "${azurerm_resource_group.sample.location}"
   address_space = ["10.0.0.0/16"]
 }
 
-resource "azurerm_subnet" "subnet" {
+resource "azurerm_subnet" "sample" {
   name = "sample"
-  resource_group_name = "${azurerm_resource_group.rg.name}"
-  virtual_network_name = "${azurerm_virtual_network.vnet.name}"
+  resource_group_name = "${azurerm_resource_group.sample.name}"
+  virtual_network_name = "${azurerm_virtual_network.sample.name}"
   address_prefix = "10.0.2.0/24"
 }
 
-resource "azurerm_public_ip" "public_ip" {
+resource "azurerm_network_security_group" "sample" {
   name = "sample"
-  location = "${var.location}"
-  resource_group_name = "${azurerm_resource_group.rg.name}"
-  public_ip_address_allocation = "dynamic"
-}
-
-resource "azurerm_network_security_group" "nsg" {
-  name = "sample"
-  location = "${var.location}"
-  resource_group_name = "${azurerm_resource_group.rg.name}"
+  resource_group_name = "${azurerm_resource_group.sample.name}"
+  location = "${azurerm_resource_group.sample.location}"
 
   security_rule {
     name = "SSH"
@@ -56,39 +45,31 @@ resource "azurerm_network_security_group" "nsg" {
   }
 }
 
-resource "azurerm_network_interface" "nic" {
+resource "azurerm_public_ip" "sample" {
   name = "sample"
-  location = "${var.location}"
-  resource_group_name = "${azurerm_resource_group.rg.name}"
+  resource_group_name = "${azurerm_resource_group.sample.name}"
+  location = "${azurerm_resource_group.sample.location}"
+  public_ip_address_allocation = "dynamic"
+}
+
+resource "azurerm_network_interface" "sample" {
+  name = "sample"
+  resource_group_name = "${azurerm_resource_group.sample.name}"
+  location = "${azurerm_resource_group.sample.location}"
 
   ip_configuration {
     name = "sample"
-    subnet_id = "${azurerm_subnet.subnet.id}"
+    subnet_id = "${azurerm_subnet.sample.id}"
     private_ip_address_allocation = "dynamic"
-    public_ip_address_id = "${azurerm_public_ip.public_ip.id}"
+    public_ip_address_id = "${azurerm_public_ip.sample.id}"
   }
 }
 
-resource "random_id" "random_id" {
-  keepers = {
-    resource_group = "${azurerm_resource_group.rg.name}"
-  }
-  byte_length = 8
-}
-
-resource "azurerm_storage_account" "sa" {
-  name = "disk${random_id.random_id.hex}"
-  location = "${var.location}"
-  resource_group_name = "${azurerm_resource_group.rg.name}"
-  account_replication_type = "LRS"
-  account_tier = "Standard"
-}
-
-resource "azurerm_virtual_machine" "vm" {
+resource "azurerm_virtual_machine" "sample" {
   name = "sample"
-  location = "${var.location}"
-  resource_group_name = "${azurerm_resource_group.rg.name}"
-  network_interface_ids = ["${azurerm_network_interface.nic.id}"]
+  resource_group_name = "${azurerm_resource_group.sample.name}"
+  location = "${azurerm_resource_group.sample.location}"
+  network_interface_ids = ["${azurerm_network_interface.sample.id}"]
 
   vm_size = "Standard_DS1_v2"
 
@@ -118,13 +99,8 @@ resource "azurerm_virtual_machine" "vm" {
       key_data = "${file("~/.ssh/azure_default.pub")}"
     }
   }
-
-  boot_diagnostics {
-    enabled = "true"
-    storage_uri = "${azurerm_storage_account.sa.primary_blob_endpoint}"
-  }
 }
 
 output "ssh" {
-  value = "ssh -i ~/.ssh/azure_default ubuntu@${azurerm_public_ip.public_ip.ip_address}"
+  value = "ssh -i ~/.ssh/azure_default ubuntu@${azurerm_public_ip.sample.ip_address}"
 }
