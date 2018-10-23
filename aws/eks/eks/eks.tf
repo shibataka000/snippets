@@ -34,8 +34,8 @@ resource "aws_eks_cluster" "sample" {
   name = "sample"
   role_arn = "${aws_iam_role.eks_service_role.arn}"
   vpc_config {
-    subnet_ids = ["${split(",", aws_cloudformation_stack.vpc.outputs.SubnetIds)}"]
-    security_group_ids = ["${aws_cloudformation_stack.vpc.outputs.SecurityGroups}"]
+    subnet_ids = ["${split(",", lookup(aws_cloudformation_stack.vpc.outputs, "SubnetIds"))}"]
+    security_group_ids = ["${lookup(aws_cloudformation_stack.vpc.outputs, "SecurityGroups")}"]
   }
 }
 
@@ -50,12 +50,12 @@ resource "aws_cloudformation_stack" "worker_node"{
   template_url = "https://amazon-eks.s3-us-west-2.amazonaws.com/cloudformation/2018-08-30/amazon-eks-nodegroup.yaml"
   parameters {
     ClusterName = "${aws_eks_cluster.sample.name}"
-    ClusterControlPlaneSecurityGroup = "${aws_cloudformation_stack.vpc.outputs.SecurityGroups}"
+    ClusterControlPlaneSecurityGroup = "${lookup(aws_cloudformation_stack.vpc.outputs, "SecurityGroups")}"
     NodeGroupName = "worker"
     NodeImageId = "${lookup(var.worker_node_image_id, var.region)}"
     KeyName = "default"
-    VpcId = "${aws_cloudformation_stack.vpc.outputs.VpcId}"
-    Subnets = "${aws_cloudformation_stack.vpc.outputs.SubnetIds}"
+    VpcId = "${lookup(aws_cloudformation_stack.vpc.outputs, "VpcId")}"
+    Subnets = "${lookup(aws_cloudformation_stack.vpc.outputs, "SubnetIds")}"
   }
   capabilities = ["CAPABILITY_IAM"]
 }
@@ -63,7 +63,7 @@ resource "aws_cloudformation_stack" "worker_node"{
 data "template_file" "aws_auth_cm" {
   template = "${file("./files/aws-auth-cm.yaml")}"
   vars {
-    instance_role_arn = "${aws_cloudformation_stack.worker_node.outputs.NodeInstanceRole}"
+    instance_role_arn = "${lookup(aws_cloudformation_stack.worker_node.outputs, "NodeInstanceRole")}"
   }
 }
 
