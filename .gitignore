@@ -5,6 +5,7 @@
 # python
 .cache/
 __pycache__/
+venv
 
 # emacs
 *flymake*
