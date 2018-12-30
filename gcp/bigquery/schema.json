@@ -1,0 +1,797 @@
+[
+    {
+        "mode": "NULLABLE",
+        "name": "additionalEventData",
+        "type": "RECORD",
+        "fields": [
+            {
+                "mode": "NULLABLE",
+                "name": "vpcEndpointId",
+                "type": "STRING"
+            }
+        ]
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "apiVersion",
+        "type": "STRING"
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "awsRegion",
+        "type": "STRING"
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "errorCode",
+        "type": "STRING"
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "errorMessage",
+        "type": "STRING"
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "eventID",
+        "type": "STRING"
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "eventName",
+        "type": "STRING"
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "eventSource",
+        "type": "STRING"
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "eventTime",
+        "type": "TIMESTAMP"
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "eventType",
+        "type": "STRING"
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "eventVersion",
+        "type": "STRING"
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "managementEvent",
+        "type": "BOOL"
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "readOnly",
+        "type": "BOOL"
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "recipientAccountId",
+        "type": "STRING"
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "requestID",
+        "type": "STRING"
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "requestParameters",
+        "type": "RECORD",
+        "fields": [
+            {
+                "mode": "NULLABLE",
+                "name": "DescribeHostsRequest",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "MaxResults",
+                        "type": "INTEGER"
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "accountAttributeNameSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "REPEATED",
+                        "name": "items",
+                        "type": "RECORD",
+                        "fields": [
+                            {
+                                "mode": "NULLABLE",
+                                "name": "attributeName",
+                                "type": "STRING"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "mode": "REPEATED",
+                "name": "acl",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "allocationIdsSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "bucketName",
+                "type": "STRING"
+            },
+            {
+                "mode": "REPEATED",
+                "name": "cors",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "customerGatewaySet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "dBSnapshotIdentifier",
+                "type": "STRING"
+            },
+            {
+                "mode": "REPEATED",
+                "name": "encryption",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "executableBySet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "filterSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "REPEATED",
+                        "name": "items",
+                        "type": "RECORD",
+                        "fields": [
+                            {
+                                "mode": "NULLABLE",
+                                "name": "name",
+                                "type": "STRING"
+                            },
+                            {
+                                "mode": "NULLABLE",
+                                "name": "valueSet",
+                                "type": "RECORD",
+                                "fields": [
+                                    {
+                                        "mode": "REPEATED",
+                                        "name": "items",
+                                        "type": "RECORD",
+                                        "fields": [
+                                            {
+                                                "mode": "NULLABLE",
+                                                "name": "value",
+                                                "type": "STRING"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "functionName",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "imagesSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "includeAllInstances",
+                "type": "BOOL"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "includePublic",
+                "type": "BOOL"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "includeShared",
+                "type": "BOOL"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "instancesSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "internetGatewayIdSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "REPEATED",
+                "name": "lifecycle",
+                "type": "STRING"
+            },
+            {
+                "mode": "REPEATED",
+                "name": "location",
+                "type": "STRING"
+            },
+            {
+                "mode": "REPEATED",
+                "name": "logging",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "maxRecords",
+                "type": "INTEGER"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "maxResults",
+                "type": "INTEGER"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "networkAclIdSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "networkInterfaceIdSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "REPEATED",
+                "name": "notification",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "ownersSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "REPEATED",
+                        "name": "items",
+                        "type": "RECORD",
+                        "fields": [
+                            {
+                                "mode": "NULLABLE",
+                                "name": "owner",
+                                "type": "STRING"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "mode": "REPEATED",
+                "name": "policy",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "publicIpsSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "REPEATED",
+                "name": "replication",
+                "type": "STRING"
+            },
+            {
+                "mode": "REPEATED",
+                "name": "requestPayment",
+                "type": "STRING"
+            },
+            {
+                "mode": "REPEATED",
+                "name": "resourceIdList",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "resourceName",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "roleArn",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "roleSessionName",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "routeTableIdSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "securityGroupIdSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "securityGroupSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "sharedUsersSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "showCacheNodeInfo",
+                "type": "BOOL"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "snapshotSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "spotInstanceRequestIdSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "startTime",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "subnetSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "REPEATED",
+                "name": "tagging",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "topicArn",
+                "type": "STRING"
+            },
+            {
+                "mode": "REPEATED",
+                "name": "versioning",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "volumeSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "vpcSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "vpnConnectionSet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "vpnGatewaySet",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "dummy",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "REPEATED",
+                "name": "website",
+                "type": "STRING"
+            }
+        ]
+    },
+    {
+        "mode": "REPEATED",
+        "name": "resources",
+        "type": "RECORD",
+        "fields": [
+            {
+                "mode": "NULLABLE",
+                "name": "ARN",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "accountId",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "type",
+                "type": "STRING"
+            }
+        ]
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "responseElements",
+        "type": "RECORD",
+        "fields": [
+            {
+                "mode": "NULLABLE",
+                "name": "assumedRoleUser",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "arn",
+                        "type": "STRING"
+                    },
+                    {
+                        "mode": "NULLABLE",
+                        "name": "assumedRoleId",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "REPEATED",
+                "name": "clusterSubnetGroups",
+                "type": "STRING"
+            },
+            {
+                "mode": "REPEATED",
+                "name": "clusters",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "credentials",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "accessKeyId",
+                        "type": "STRING"
+                    },
+                    {
+                        "mode": "NULLABLE",
+                        "name": "expiration",
+                        "type": "STRING"
+                    },
+                    {
+                        "mode": "NULLABLE",
+                        "name": "sessionToken",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "REPEATED",
+                "name": "dBSnapshotAttributes",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "attributeName",
+                        "type": "STRING"
+                    },
+                    {
+                        "mode": "REPEATED",
+                        "name": "attributeValues",
+                        "type": "STRING"
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "dBSnapshotIdentifier",
+                "type": "STRING"
+            },
+            {
+                "mode": "REPEATED",
+                "name": "eventSubscriptionsList",
+                "type": "STRING"
+            },
+            {
+                "mode": "REPEATED",
+                "name": "loadBalancers",
+                "type": "STRING"
+            },
+            {
+                "mode": "REPEATED",
+                "name": "parameterGroups",
+                "type": "STRING"
+            },
+            {
+                "mode": "REPEATED",
+                "name": "snapshots",
+                "type": "STRING"
+            }
+        ]
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "sharedEventID",
+        "type": "STRING"
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "sourceIPAddress",
+        "type": "STRING"
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "userAgent",
+        "type": "STRING"
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "userIdentity",
+        "type": "RECORD",
+        "fields": [
+            {
+                "mode": "NULLABLE",
+                "name": "accessKeyId",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "accountId",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "arn",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "invokedBy",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "principalId",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "sessionContext",
+                "type": "RECORD",
+                "fields": [
+                    {
+                        "mode": "NULLABLE",
+                        "name": "attributes",
+                        "type": "RECORD",
+                        "fields": [
+                            {
+                                "mode": "NULLABLE",
+                                "name": "creationDate",
+                                "type": "TIMESTAMP"
+                            },
+                            {
+                                "mode": "NULLABLE",
+                                "name": "mfaAuthenticated",
+                                "type": "STRING"
+                            }
+                        ]
+                    },
+                    {
+                        "mode": "NULLABLE",
+                        "name": "sessionIssuer",
+                        "type": "RECORD",
+                        "fields": [
+                            {
+                                "mode": "NULLABLE",
+                                "name": "accountId",
+                                "type": "STRING"
+                            },
+                            {
+                                "mode": "NULLABLE",
+                                "name": "arn",
+                                "type": "STRING"
+                            },
+                            {
+                                "mode": "NULLABLE",
+                                "name": "principalId",
+                                "type": "STRING"
+                            },
+                            {
+                                "mode": "NULLABLE",
+                                "name": "type",
+                                "type": "STRING"
+                            },
+                            {
+                                "mode": "NULLABLE",
+                                "name": "userName",
+                                "type": "STRING"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "type",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "userName",
+                "type": "STRING"
+            }
+        ]
+    },
+    {
+        "mode": "NULLABLE",
+        "name": "vpcEndpointId",
+        "type": "STRING"
+    }
+]
