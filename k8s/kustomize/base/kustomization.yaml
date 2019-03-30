@@ -1,0 +1,9 @@
+commonLabels:
+  app: nginx
+resources:
+  - deployment.yaml
+  - service.yaml
+configMapGenerator:
+  - name: nginx-map
+    files:
+      - name
