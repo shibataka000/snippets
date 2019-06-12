@@ -130,7 +130,7 @@ resource "aws_eks_cluster" "demo" {
 
   vpc_config {
     security_group_ids = ["${aws_security_group.demo-cluster.id}"]
-    subnet_ids         = ["${aws_subnet.demo.*.id}"]
+    subnet_ids         = [for subnet in aws_subnet.demo: subnet.id]
   }
 
   depends_on = [
@@ -279,7 +279,7 @@ resource "aws_autoscaling_group" "demo" {
   max_size             = 2
   min_size             = 1
   name                 = "terraform-eks-demo"
-  vpc_zone_identifier  = ["${aws_subnet.demo.*.id}"]
+  vpc_zone_identifier  = [for subnet in aws_subnet.demo: subnet.id]
 
   tag {
     key                 = "Name"
