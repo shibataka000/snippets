@@ -1,0 +1,195 @@
+#  Licensed to the Apache Software Foundation (ASF) under one   *
+#  or more contributor license agreements.  See the NOTICE file *
+#  distributed with this work for additional information        *
+#  regarding copyright ownership.  The ASF licenses this file   *
+#  to you under the Apache License, Version 2.0 (the            *
+#  "License"); you may not use this file except in compliance   *
+#  with the License.  You may obtain a copy of the License at   *
+#                                                               *
+#    http://www.apache.org/licenses/LICENSE-2.0                 *
+#                                                               *
+#  Unless required by applicable law or agreed to in writing,   *
+#  software distributed under the License is distributed on an  *
+#  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY       *
+#  KIND, either express or implied.  See the License for the    *
+#  specific language governing permissions and limitations      *
+#  under the License.                                           *
+
+# Note: The airflow image used in this example is obtained by
+# building the image from the local docker subdirectory.
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: airflow
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: admin-rbac
+subjects:
+  - kind: ServiceAccount
+    # Reference to upper's `metadata.name`
+    name: airflow
+    # Reference to upper's `metadata.namespace`
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: airflow
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: airflow
+    spec:
+      serviceAccountName: airflow
+      initContainers:
+      - name: "init"
+        image: {{ .Values.airflow.airflow.image }}:{{ .Values.airflow.airflow.tag }}
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: airflow-configmap
+          mountPath: /root/airflow/airflow.cfg
+          subPath: airflow.cfg
+        - name: airflow-dags-fake
+          mountPath: /root/airflow/dags
+        - name: test-volume
+          mountPath: /root/test_volume
+        env:
+        - name: SQL_ALCHEMY_CONN
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secrets
+              key: sql_alchemy_conn
+        command:
+          - "bash"
+        args:
+          - "-cx"
+          - "./tmp/airflow-test-env-init.sh"
+      containers:
+      - name: webserver
+        image: {{ .Values.airflow.airflow.image }}:{{ .Values.airflow.airflow.tag }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: webserver
+          containerPort: 8080
+        args: ["webserver"]
+        env:
+        - name: AIRFLOW_KUBE_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: SQL_ALCHEMY_CONN
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secrets
+              key: sql_alchemy_conn
+        volumeMounts:
+        - name: airflow-configmap
+          mountPath: /root/airflow/airflow.cfg
+          subPath: airflow.cfg
+        - name: airflow-dags-git
+          mountPath: /root/airflow/dags
+        - name: airflow-logs
+          mountPath: /root/airflow/logs
+      - name: scheduler
+        image: {{ .Values.airflow.airflow.image }}:{{ .Values.airflow.airflow.tag }}
+        imagePullPolicy: IfNotPresent
+        args: ["scheduler"]
+        env:
+        - name: AIRFLOW_KUBE_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: SQL_ALCHEMY_CONN
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secrets
+              key: sql_alchemy_conn
+        volumeMounts:
+        - name: airflow-configmap
+          mountPath: /root/airflow/airflow.cfg
+          subPath: airflow.cfg
+        - name: airflow-dags-git
+          mountPath: /root/airflow/dags
+        - name: airflow-logs
+          mountPath: /root/airflow/logs
+      - name: git-sync-clone
+        env:
+        - name: GIT_SYNC_REPO
+          value: git@github.com:{{ .Values.airflow.git_sync.repo }}.git
+        - name: GIT_SYNC_BRANCH
+          value: {{ .Values.airflow.git_sync.branch }}
+        - name: GIT_SYNC_ROOT
+          value: /git
+        - name: GIT_SYNC_DEST
+          value: repo
+        - name: GIT_SYNC_WAIT
+          value: "60"
+        - name: GIT_SYNC_SSH
+          value: "true"
+        image: {{ .Values.airflow.git_sync.image }}:{{ .Values.airflow.git_sync.tag}}
+        imagePullPolicy: Always
+        securityContext:
+          runAsUser: 65533
+        volumeMounts:
+        - mountPath: /git
+          name: airflow-dags-git
+        - mountPath: /etc/git-secret/ssh
+          name: airflow-git-sync-ssh-key
+          subPath: ssh
+        - mountPath: /etc/git-secret/known_hosts
+          name: airflow-git-sync-known-hosts
+          subPath: known_hosts
+      securityContext:
+        fsGroup: 65535
+      volumes:
+      - name: airflow-dags
+        persistentVolumeClaim:
+          claimName: airflow-dags
+      - name: airflow-dags-fake
+        emptyDir: {}
+      - name: airflow-dags-git
+        emptyDir: {}
+      - name: test-volume
+        persistentVolumeClaim:
+          claimName: test-volume
+      - name: airflow-logs
+        persistentVolumeClaim:
+          claimName: airflow-logs
+      - name: airflow-configmap
+        configMap:
+          name: airflow-configmap
+      - name: airflow-git-sync-ssh-key
+        secret:
+          secretName: airflow-git-sync-ssh-key
+          defaultMode: 420
+          items:
+          - key: gitSshKey
+            mode: 288
+            path: ssh
+      - name: airflow-git-sync-known-hosts
+        configMap:
+          name: airflow-git-sync-known-hosts
+          items:
+          - key: known_hosts
+            path: known_hosts
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: airflow
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      nodePort: 30809
+  selector:
+    name: airflow

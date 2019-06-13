@@ -1,0 +1,16 @@
+efs-provisioner:
+  efsProvisioner:
+    efsFileSystemId: fs-a8871b89
+    awsRegion: ap-northeast-1
+    storageClass:
+      name: efs
+airflow:
+  airflow:
+    image: shibataka000/airflow
+    tag: latest
+  git_sync:
+    image: gcr.io/google-containers/git-sync
+    tag: v3.1.1
+    repo: shibataka000/airflow-dags
+    branch: master
+  executor: KubernetesExecutor
