@@ -1,0 +1,27 @@
+bases:
+- ../../base
+commonLabels:
+  app: airflow
+  version: dev
+commonAnnotations:
+  app: airflow
+namePrefix: kustomize-sample-
+namespace: airflow-dev
+images:
+- name: shibataka000/airflow
+  newName: shibataka123/airflow
+  newTag: v1
+patchesStrategicMerge:
+- volumes_overlay_storage_class_name.yaml
+patchesJson6902:
+- target:
+    group: extensions
+    version: v1beta1
+    kind: Deployment
+    name: airflow
+  path: airflow_change_container_port.yaml
+- target:
+    version: v1
+    kind: Service
+    name: airflow
+  path: airflow_change_node_port.yaml

@@ -1,0 +1,20 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: airflow-dags
+spec:
+  storageClassName: efs-dev
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: airflow-logs
+spec:
+  storageClassName: efs-dev
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: test-volume
+spec:
+  storageClassName: efs-dev
