@@ -11,8 +11,12 @@ terraform {
 
 resource "google_container_cluster" "sandbox" {
   name = "sandbox"
-  zone = "asia-northeast1-a"
+  location = "asia-northeast1-a"
   initial_node_count = 3
+
+  node_config {
+    machine_type = "n1-standard-2"
+  }
 }
 
 resource "null_resource" "credentials" {
