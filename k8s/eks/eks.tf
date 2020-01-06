@@ -11,12 +11,11 @@ terraform {
   }
 }
 
-# This data source is included for ease of sample architecture deployment
-# and can be swapped out as necessary.
 data "aws_availability_zones" "available" {}
 
 resource "aws_vpc" "demo" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_hostnames = true
 
   tags = {
     Name = var.cluster-name
@@ -154,19 +153,6 @@ resource "aws_security_group" "demo-cluster" {
   }
 }
 
-# # OPTIONAL: Allow inbound traffic from your local workstation external IP
-# #           to the Kubernetes. You will need to replace A.B.C.D below with
-# #           your real IP. Services like icanhazip.com can help you find this.
-# resource "aws_security_group_rule" "demo-cluster-ingress-workstation-https" {
-#   cidr_blocks       = ["A.B.C.D/32"]
-#   description       = "Allow workstation to communicate with the cluster API Server"
-#   from_port         = 443
-#   protocol          = "tcp"
-#   security_group_id = "${aws_security_group.demo-cluster.id}"
-#   to_port           = 443
-#   type              = "ingress"
-# }
-
 resource "aws_eks_cluster" "demo" {
   name            = var.cluster-name
   role_arn        = aws_iam_role.demo-cluster.arn
@@ -175,6 +161,8 @@ resource "aws_eks_cluster" "demo" {
     security_group_ids = [aws_security_group.demo-cluster.id]
     subnet_ids         = [for subnet in concat(aws_subnet.public, aws_subnet.private): subnet.id]
   }
+
+  enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 
   depends_on = [
     aws_iam_role_policy_attachment.demo-cluster-AmazonEKSClusterPolicy,
@@ -260,6 +248,17 @@ resource "aws_security_group_rule" "demo-node-ingress-cluster" {
   security_group_id        = aws_security_group.demo-node.id
   source_security_group_id = aws_security_group.demo-cluster.id
   to_port                  = 65535
+  type                     = "ingress"
+}
+
+# Allow https traffic from cluster to node for admission webhook.
+resource "aws_security_group_rule" "demo-node-ingress-cluster-https" {
+  description              = "Allow worker Kubelets and pods to receive communication from the cluster control plane"
+  from_port                = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.demo-node.id
+  source_security_group_id = aws_security_group.demo-cluster.id
+  to_port                  = 443
   type                     = "ingress"
 }
 
