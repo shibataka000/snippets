@@ -3,7 +3,7 @@ variable "region" {
 }
 
 variable "profile" {
-  default ="default"
+  default = "default"
 }
 
 variable "cluster-name" {

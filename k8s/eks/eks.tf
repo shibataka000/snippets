@@ -1,12 +1,12 @@
 provider "aws" {
-  region = var.region
+  region  = var.region
   profile = var.profile
 }
 
 terraform {
   backend "s3" {
     bucket = "sbtk-tfstate"
-    key = "snippets/k8s/eks.tf"
+    key    = "snippets/k8s/eks.tf"
     region = "ap-northeast-1"
   }
 }
@@ -18,7 +18,7 @@ resource "aws_vpc" "demo" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = var.cluster-name
+    Name                                        = var.cluster-name
     "kubernetes.io/cluster/${var.cluster-name}" = "shared"
   }
 }
@@ -31,7 +31,7 @@ resource "aws_subnet" "public" {
   vpc_id            = aws_vpc.demo.id
 
   tags = {
-    Name = "${var.cluster-name}-public"
+    Name                                        = "${var.cluster-name}-public"
     "kubernetes.io/cluster/${var.cluster-name}" = "shared"
   }
 }
@@ -68,7 +68,7 @@ resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.demo.id
 
   tags = {
-    Name = "${var.cluster-name}-private"
+    Name                                        = "${var.cluster-name}-private"
     "kubernetes.io/cluster/${var.cluster-name}" = "shared"
   }
 }
@@ -154,12 +154,12 @@ resource "aws_security_group" "demo-cluster" {
 }
 
 resource "aws_eks_cluster" "demo" {
-  name            = var.cluster-name
-  role_arn        = aws_iam_role.demo-cluster.arn
+  name     = var.cluster-name
+  role_arn = aws_iam_role.demo-cluster.arn
 
   vpc_config {
     security_group_ids = [aws_security_group.demo-cluster.id]
-    subnet_ids         = [for subnet in concat(aws_subnet.public, aws_subnet.private): subnet.id]
+    subnet_ids         = [for subnet in concat(aws_subnet.public, aws_subnet.private) : subnet.id]
   }
 
   enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
@@ -226,7 +226,7 @@ resource "aws_security_group" "demo-node" {
   }
 
   tags = {
-    Name = var.cluster-name
+    Name                                        = var.cluster-name
     "kubernetes.io/cluster/${var.cluster-name}" = "owned"
   }
 }
@@ -315,7 +315,7 @@ resource "aws_autoscaling_group" "demo" {
   max_size             = 2
   min_size             = 1
   name                 = var.cluster-name
-  vpc_zone_identifier  = [for subnet in aws_subnet.private: subnet.id]
+  vpc_zone_identifier  = [for subnet in aws_subnet.private : subnet.id]
 
   tag {
     key                 = "Name"
@@ -331,7 +331,7 @@ resource "aws_autoscaling_group" "demo" {
 }
 
 resource "local_file" "config_map_aws_auth" {
-  content = <<CONFIGMAPAWSAUTH
+  content  = <<CONFIGMAPAWSAUTH
 apiVersion: v1
 kind: ConfigMap
 metadata:
