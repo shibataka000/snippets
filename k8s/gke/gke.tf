@@ -10,8 +10,8 @@ terraform {
 }
 
 resource "google_container_cluster" "sandbox" {
-  name = "sandbox"
-  location = "asia-northeast1-a"
+  name               = "sandbox"
+  location           = "asia-northeast1-a"
   initial_node_count = 3
 
   node_config {
