@@ -23,12 +23,12 @@ resource "null_resource" "credentials" {
   provisioner "local-exec" {
     command = "gcloud container clusters get-credentials ${google_container_cluster.sandbox.name} --zone ${google_container_cluster.sandbox.zone}"
   }
-  depends_on = ["google_container_cluster.sandbox"]
+  depends_on = [google_container_cluster.sandbox]
 }
 
 resource "null_resource" "cluster_admin_binding" {
   provisioner "local-exec" {
     command = "kubectl create clusterrolebinding cluster-admin-binding --clusterrole=cluster-admin --user=$(gcloud config get-value core/account)"
   }
-  depends_on = ["null_resource.credentials"]
+  depends_on = [null_resource.credentials]
 }
