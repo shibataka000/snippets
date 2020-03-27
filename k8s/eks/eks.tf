@@ -208,125 +208,16 @@ resource "aws_iam_role_policy_attachment" "demo-node-AmazonEC2ContainerRegistryR
   role       = aws_iam_role.demo-node.name
 }
 
-resource "aws_iam_instance_profile" "demo-node" {
-  name = var.cluster-name
-  role = aws_iam_role.demo-node.name
-}
+resource "aws_eks_node_group" "demo" {
+  cluster_name    = aws_eks_cluster.demo.name
+  node_group_name = "${aws_eks_cluster.demo.name}-node-group"
+  node_role_arn   = aws_iam_role.demo-node.arn
+  subnet_ids      = [for subnet in aws_subnet.private : subnet.id]
 
-resource "aws_security_group" "demo-node" {
-  name        = "${var.cluster-name}-node"
-  description = "Security group for all nodes in the cluster"
-  vpc_id      = aws_vpc.demo.id
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name                                        = var.cluster-name
-    "kubernetes.io/cluster/${var.cluster-name}" = "owned"
-  }
-}
-
-resource "aws_security_group_rule" "demo-node-ingress-self" {
-  description              = "Allow node to communicate with each other"
-  from_port                = 0
-  protocol                 = "-1"
-  security_group_id        = aws_security_group.demo-node.id
-  source_security_group_id = aws_security_group.demo-node.id
-  to_port                  = 65535
-  type                     = "ingress"
-}
-
-resource "aws_security_group_rule" "demo-node-ingress-cluster" {
-  description              = "Allow worker Kubelets and pods to receive communication from the cluster control plane"
-  from_port                = 1025
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.demo-node.id
-  source_security_group_id = aws_security_group.demo-cluster.id
-  to_port                  = 65535
-  type                     = "ingress"
-}
-
-# Allow https traffic from cluster to node for admission webhook.
-resource "aws_security_group_rule" "demo-node-ingress-cluster-https" {
-  description              = "Allow worker Kubelets and pods to receive communication from the cluster control plane"
-  from_port                = 443
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.demo-node.id
-  source_security_group_id = aws_security_group.demo-cluster.id
-  to_port                  = 443
-  type                     = "ingress"
-}
-
-resource "aws_security_group_rule" "demo-cluster-ingress-node-https" {
-  description              = "Allow pods to communicate with the cluster API Server"
-  from_port                = 443
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.demo-cluster.id
-  source_security_group_id = aws_security_group.demo-node.id
-  to_port                  = 443
-  type                     = "ingress"
-}
-
-data "aws_ami" "eks-worker" {
-  filter {
-    name   = "name"
-    values = ["amazon-eks-node-${aws_eks_cluster.demo.version}-v*"]
-  }
-
-  most_recent = true
-  owners      = ["602401143452"] # Amazon EKS AMI Account ID
-}
-
-# EKS currently documents this required userdata for EKS worker nodes to
-# properly configure Kubernetes applications on the EC2 instance.
-# We utilize a Terraform local here to simplify Base64 encoding this
-# information into the AutoScaling Launch Configuration.
-# More information: https://docs.aws.amazon.com/eks/latest/userguide/launch-workers.html
-locals {
-  demo-node-userdata = <<USERDATA
-#!/bin/bash
-set -o xtrace
-/etc/eks/bootstrap.sh --apiserver-endpoint '${aws_eks_cluster.demo.endpoint}' --b64-cluster-ca '${aws_eks_cluster.demo.certificate_authority.0.data}' '${var.cluster-name}'
-USERDATA
-}
-
-resource "aws_launch_configuration" "demo" {
-  associate_public_ip_address = true
-  iam_instance_profile        = aws_iam_instance_profile.demo-node.name
-  image_id                    = data.aws_ami.eks-worker.id
-  instance_type               = "t3.large"
-  name_prefix                 = var.cluster-name
-  security_groups             = [aws_security_group.demo-node.id]
-  user_data_base64            = base64encode(local.demo-node-userdata)
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_autoscaling_group" "demo" {
-  desired_capacity     = 2
-  launch_configuration = aws_launch_configuration.demo.id
-  max_size             = 2
-  min_size             = 1
-  name                 = var.cluster-name
-  vpc_zone_identifier  = [for subnet in aws_subnet.private : subnet.id]
-
-  tag {
-    key                 = "Name"
-    value               = var.cluster-name
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "kubernetes.io/cluster/${var.cluster-name}"
-    value               = "owned"
-    propagate_at_launch = true
+  scaling_config {
+    desired_size = 1
+    max_size     = 3
+    min_size     = 1
   }
 }
 
