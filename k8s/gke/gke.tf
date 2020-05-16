@@ -1,5 +1,5 @@
 provider "google" {
-  project = "numeric-haven-216005"
+  project = "shibataka000-dev-277404"
 }
 
 terraform {
