@@ -33,6 +33,7 @@ resource "aws_subnet" "public" {
   tags = {
     Name                                        = "${var.cluster-name}-public"
     "kubernetes.io/cluster/${var.cluster-name}" = "shared"
+    "kubernetes.io/role/elb"                    = "1"
   }
 }
 
@@ -70,6 +71,7 @@ resource "aws_subnet" "private" {
   tags = {
     Name                                        = "${var.cluster-name}-private"
     "kubernetes.io/cluster/${var.cluster-name}" = "shared"
+    "kubernetes.io/role/internal-elb"           = "1"
   }
 }
 
@@ -243,4 +245,22 @@ CONFIGMAPAWSAUTH
   }
 
   depends_on = [aws_eks_cluster.demo]
+}
+
+data "http" "alb_ingress_iam_policy" {
+  url = "https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.1.4/docs/examples/iam-policy.json"
+}
+
+resource "aws_iam_policy" "alb_ingress" {
+  name   = "${var.cluster-name}-ALBIngressControllerIAMPolicy"
+  policy = data.http.alb_ingress_iam_policy.body
+}
+
+resource "aws_iam_role_policy_attachment" "alb_ingress" {
+  policy_arn = aws_iam_policy.alb_ingress.arn
+  role       = aws_iam_role.demo-node.name
+}
+
+output "vpc" {
+  value = aws_vpc.demo.id
 }
