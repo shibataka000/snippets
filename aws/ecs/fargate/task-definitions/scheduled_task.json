@@ -1,10 +1,9 @@
 [
     {
         "name": "ubuntu",
-        "image": "ubuntu",
+        "image": "ubuntu:latest",
         "cpu": 64,
         "memory": 128,
-        "essential": true,
         "command": [
             "/bin/sh",
             "-c",
@@ -17,6 +16,8 @@
                 "awslogs-region": "ap-northeast-1",
                 "awslogs-stream-prefix": "scheduled_task"
             }
-        }
+        },
+        "essential": true,
+        "readonlyRootFilesystem": true
     }
 ]

@@ -1,10 +1,9 @@
 [
     {
         "name": "nginx",
-        "image": "nginx",
+        "image": "nginx:latest",
         "cpu": 64,
         "memory": 128,
-        "essential": true,
         "portMappings": [
             {
                 "containerPort": 80
@@ -15,42 +14,10 @@
             "options": {
                 "awslogs-group": "${log-group}",
                 "awslogs-region": "ap-northeast-1",
-                "awslogs-stream-prefix": "sample"
+                "awslogs-stream-prefix": "service"
             }
-        }
-    },
-    {
-        "name": "ubuntu",
-        "image": "ubuntu",
-        "cpu": 64,
-        "memory": 128,
+        },
         "essential": true,
-        "command": [
-            "/bin/sh",
-            "-c",
-            "echo $PARAM1 $PARAM2 $PARAM3 && sleep 3600"
-        ],
-        "secrets": [
-            {
-                "name": "PARAM1",
-                "valueFrom": "${param1}"
-            },
-            {
-                "name": "PARAM2",
-                "valueFrom": "${param2}"
-            },
-            {
-                "name": "PARAM3",
-                "valueFrom": "${param3}"
-            }
-        ],
-        "logConfiguration": {
-            "logDriver": "awslogs",
-            "options": {
-                "awslogs-group": "${log-group}",
-                "awslogs-region": "ap-northeast-1",
-                "awslogs-stream-prefix": "sample"
-            }
-        }
+        "readonlyRootFilesystem": false
     }
 ]

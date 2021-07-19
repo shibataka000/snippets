@@ -30,6 +30,8 @@ resource "aws_internet_gateway" "public" {
 }
 
 resource "aws_route_table" "public" {
+  count = length(aws_subnet.public)
+
   vpc_id = aws_vpc.demo.id
 
   route {
@@ -42,7 +44,7 @@ resource "aws_route_table_association" "public" {
   count = length(aws_subnet.public)
 
   subnet_id      = aws_subnet.public[count.index].id
-  route_table_id = aws_route_table.public.id
+  route_table_id = aws_route_table.public[count.index].id
 }
 
 resource "aws_subnet" "private" {
@@ -90,8 +92,6 @@ resource "aws_route_table_association" "private" {
   subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private[count.index].id
 }
-
-# PrivateLink
 
 resource "aws_vpc_endpoint" "ecr-dkr" {
   vpc_id              = aws_vpc.demo.id

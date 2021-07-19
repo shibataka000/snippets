@@ -1,120 +1,38 @@
-provider "aws" {
-  region = "ap-northeast-1"
-}
-
-terraform {
-  backend "s3" {
-    bucket = "sbtk-tfstate"
-    key    = "snippets/aws/ecs/fargate/fargate.tf"
-    region = "ap-northeast-1"
-  }
-}
-
 resource "aws_ecs_cluster" "sample" {
   name = var.cluster-name
 }
 
 resource "aws_cloudwatch_log_group" "sample" {
-  name = "/ecs/sample"
+  name = "/ecs/${var.cluster-name}"
 }
 
-data "aws_iam_role" "ecs_task_execution_role" {
-  name = "ecsTaskExecutionRole"
-}
+resource "aws_iam_role" "ecs_task_execution_role" {
+  name = "${var.cluster-name}-ecs-task-execution-role"
 
-resource "aws_iam_policy" "get_secrets" {
-  name = "${var.cluster-name}-get-secrets"
-
-  policy = <<EOF
+  assume_role_policy = <<POLICY
 {
   "Version": "2012-10-17",
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "ssm:GetParameters",
-        "secretsmanager:GetSecretValue"
-      ],
-      "Resource": "*"
+      "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
     }
   ]
 }
-EOF
+POLICY
 }
 
-resource "aws_iam_role_policy_attachment" "get_secrets" {
-  role       = data.aws_iam_role.ecs_task_execution_role.name
-  policy_arn = aws_iam_policy.get_secrets.arn
-}
-
-# Service
-
-locals {
-  service_task_definitions_vars = {
-    log-group = aws_cloudwatch_log_group.sample.name
-    param1    = aws_ssm_parameter.param1.arn
-    param2    = aws_ssm_parameter.param2.arn
-    param3    = aws_secretsmanager_secret_version.param3.arn
-  }
-}
-
-resource "aws_ecs_task_definition" "service" {
-  family                   = "service"
-  container_definitions    = templatefile("task-definitions/service.json", local.service_task_definitions_vars)
-  requires_compatibilities = ["FARGATE"]
-  network_mode             = "awsvpc"
-  cpu                      = 256
-  memory                   = 512
-  execution_role_arn       = data.aws_iam_role.ecs_task_execution_role.arn
-}
-
-resource "aws_ssm_parameter" "param1" {
-  name  = "param1"
-  type  = "String"
-  value = "value1"
-}
-
-resource "aws_ssm_parameter" "param2" {
-  name  = "param2"
-  type  = "SecureString"
-  value = "value2"
-}
-
-resource "aws_secretsmanager_secret" "param3" {
-  name = "param3"
-}
-
-resource "aws_secretsmanager_secret_version" "param3" {
-  secret_id     = aws_secretsmanager_secret.param3.id
-  secret_string = "value3"
-}
-
-resource "aws_ecs_service" "sample" {
-  name            = "sample"
-  cluster         = aws_ecs_cluster.sample.id
-  task_definition = aws_ecs_task_definition.service.arn
-  launch_type     = "FARGATE"
-  desired_count   = 3
-  network_configuration {
-    subnets          = [for subnet in aws_subnet.private : subnet.id]
-    security_groups  = [aws_security_group.sample.id]
-    assign_public_ip = false
-  }
-  load_balancer {
-    target_group_arn = aws_lb_target_group.http.arn
-    container_name   = "nginx"
-    container_port   = 80
-  }
-  lifecycle {
-    ignore_changes = [
-      desired_count
-    ]
-  }
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  role       = aws_iam_role.ecs_task_execution_role.name
 }
 
 resource "aws_security_group" "sample" {
   vpc_id = aws_vpc.demo.id
-  name   = "sample"
+  name   = var.cluster-name
 
   egress {
     from_port   = 0
@@ -138,7 +56,42 @@ resource "aws_security_group" "sample" {
   }
 
   tags = {
-    Name = "sample"
+    Name = "${var.cluster-name}"
+  }
+}
+
+# Service
+
+resource "aws_ecs_task_definition" "service" {
+  family                   = "${var.cluster-name}-service"
+  container_definitions    = templatefile("task-definitions/service.json", { log-group = aws_cloudwatch_log_group.sample.name })
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = 256
+  memory                   = 512
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+}
+
+resource "aws_ecs_service" "service" {
+  name            = "${var.cluster-name}-service"
+  cluster         = aws_ecs_cluster.sample.id
+  task_definition = aws_ecs_task_definition.service.arn
+  launch_type     = "FARGATE"
+  desired_count   = 3
+  network_configuration {
+    subnets          = [for subnet in aws_subnet.private : subnet.id]
+    security_groups  = [aws_security_group.sample.id]
+    assign_public_ip = false
+  }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.http.arn
+    container_name   = "nginx"
+    container_port   = 80
+  }
+  lifecycle {
+    ignore_changes = [
+      desired_count
+    ]
   }
 }
 
@@ -171,13 +124,13 @@ resource "aws_lb_target_group" "http" {
 resource "aws_appautoscaling_target" "ecs_target" {
   max_capacity       = 6
   min_capacity       = 2
-  resource_id        = "service/${aws_ecs_cluster.sample.name}/${aws_ecs_service.sample.name}"
-  role_arn           = data.aws_iam_role.aws_service_role_for_application_autoScaling_ecs_service.arn
+  resource_id        = "service/${aws_ecs_cluster.sample.name}/${aws_ecs_service.service.name}"
+  role_arn           = data.aws_iam_role.ecs_service_role_for_application_autoscaling.arn
   scalable_dimension = "ecs:service:DesiredCount"
   service_namespace  = "ecs"
 }
 
-data "aws_iam_role" "aws_service_role_for_application_autoScaling_ecs_service" {
+data "aws_iam_role" "ecs_service_role_for_application_autoscaling" {
   name = "AWSServiceRoleForApplicationAutoScaling_ECSService"
 }
 
@@ -204,20 +157,14 @@ output "url" {
 
 # Scheduled task
 
-locals {
-  scheduled_task_task_definitions_vars = {
-    log-group = aws_cloudwatch_log_group.sample.name
-  }
-}
-
 resource "aws_ecs_task_definition" "scheduled_task" {
-  family                   = "scheduled_task"
-  container_definitions    = templatefile("task-definitions/scheduled_task.json", local.scheduled_task_task_definitions_vars)
+  family                   = "${var.cluster-name}-scheduled-task"
+  container_definitions    = templatefile("task-definitions/scheduled_task.json", { log-group = aws_cloudwatch_log_group.sample.name })
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 256
   memory                   = 512
-  execution_role_arn       = data.aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
 }
 
 resource "aws_iam_role" "ecs_scheduled_task" {
