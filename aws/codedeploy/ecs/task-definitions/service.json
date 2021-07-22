@@ -1,0 +1,23 @@
+[
+    {
+        "name": "nginx",
+        "image": "nginx:latest",
+        "cpu": 64,
+        "memory": 128,
+        "portMappings": [
+            {
+                "containerPort": 80
+            }
+        ],
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "${log-group}",
+                "awslogs-region": "ap-northeast-1",
+                "awslogs-stream-prefix": "service"
+            }
+        },
+        "essential": true,
+        "readonlyRootFilesystem": false
+    }
+]
