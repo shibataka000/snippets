@@ -55,6 +55,13 @@ resource "aws_security_group" "sample" {
     to_port     = 80
   }
 
+  ingress {
+    cidr_blocks = ["0.0.0.0/0"]
+    protocol    = "tcp"
+    from_port   = 8080
+    to_port     = 8080
+  }
+
   tags = {
     Name = "${var.cluster-name}"
   }
@@ -112,7 +119,7 @@ resource "aws_lb" "alb" {
   subnets            = [for subnet in aws_subnet.public : subnet.id]
 }
 
-resource "aws_lb_listener" "http" {
+resource "aws_lb_listener" "http_blue" {
   load_balancer_arn = aws_lb.alb.arn
   port              = "80"
   protocol          = "HTTP"
@@ -120,6 +127,23 @@ resource "aws_lb_listener" "http" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.http_blue.arn
+  }
+
+  lifecycle {
+    ignore_changes = [
+      default_action[0].target_group_arn
+    ]
+  }
+}
+
+resource "aws_lb_listener" "http_green" {
+  load_balancer_arn = aws_lb.alb.arn
+  port              = "8080"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.http_green.arn
   }
 
   lifecycle {
