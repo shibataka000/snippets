@@ -1,0 +1,9 @@
+name: Sample
+on: push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run sample action
+      uses: ./.github/actions/sample.yaml

@@ -1,0 +1,14 @@
+name: Sample
+runs:
+  using: composite
+  steps:
+  - name: Step 1
+    run: |
+      # Step 1
+      echo "Step 1"
+    shell: bash
+  - name: Step 2
+    run: |
+      # Step 2
+      echo "Step 2"
+    shell: bash
