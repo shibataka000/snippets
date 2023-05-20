@@ -6,4 +6,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Run sample action
-      uses: ./.github/actions/sample.yaml
+      uses: ./.github/actions/sample
