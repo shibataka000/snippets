@@ -4,7 +4,7 @@ provider "aws" {
 
 data "aws_ami" "windows_server" {
   most_recent = true
-  owners = ["amazon"]
+  owners      = ["amazon"]
   filter {
     name = "name"
     values = [
@@ -22,20 +22,20 @@ data "aws_security_group" "default" {
 }
 
 resource "aws_instance" "windows_server" {
-  ami = "${data.aws_ami.windows_server.image_id}"
+  ami                    = data.aws_ami.windows_server.image_id
   vpc_security_group_ids = ["${data.aws_security_group.default.id}"]
-  instance_type = "t2.medium"
-  key_name = "default"
-  iam_instance_profile = "SSM"
-  tags {
+  instance_type          = "t2.medium"
+  key_name               = "default"
+  iam_instance_profile   = "SSM"
+  tags = {
     "Patch Group" = "patchgroup01"
   }
 }
 
 output "instance_id" {
-  value = "${aws_instance.windows_server.id}"
+  value = aws_instance.windows_server.id
 }
 
 output "public_ip" {
-  value = "${aws_instance.windows_server.public_ip}"
+  value = aws_instance.windows_server.public_ip
 }
