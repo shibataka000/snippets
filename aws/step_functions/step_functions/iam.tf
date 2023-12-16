@@ -19,6 +19,7 @@ resource "aws_iam_policy" "sfn_my_state_machine" {
 }
 
 data "aws_iam_policy_document" "sfn_my_state_machine_policy" {
+  # Logging
   statement {
     actions = [
       "logs:CreateLogDelivery",
@@ -33,6 +34,35 @@ data "aws_iam_policy_document" "sfn_my_state_machine_policy" {
       "logs:DescribeLogGroups",
     ]
     resources = ["*"]
+  }
+
+  # Call third-party API
+  statement {
+    actions   = ["states:InvokeHTTPEndpoint"]
+    resources = [aws_sfn_state_machine.my_state_machine.arn]
+    condition {
+      test     = "StringEquals"
+      variable = "states:HTTPMethod"
+      values   = ["GET"]
+    }
+    condition {
+      test     = "StringLike"
+      variable = "states:HTTPEndpoint"
+      values   = ["https://zipcloud.ibsnet.co.jp/api/search"]
+    }
+  }
+
+  statement {
+    actions   = ["events:RetrieveConnectionCredentials"]
+    resources = [aws_cloudwatch_event_connection.zipcloud.arn]
+  }
+
+  statement {
+    actions = [
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret",
+    ]
+    resources = ["arn:aws:secretsmanager:*:*:secret:events!connection/*"]
   }
 }
 
